@@ -26,7 +26,7 @@ except ImportError:
 class FFMPEG_VideoReader:
 
     def __init__(self, filename, print_infos=False, bufsize = None,
-                 pix_fmt="rgb24", check_duration=True):
+                 pix_fmt=u"rgb24", check_duration=True):
 
         self.filename = filename
         infos = ffmpeg_parse_infos(filename, print_infos, check_duration)
@@ -63,26 +63,26 @@ class FFMPEG_VideoReader:
 
         if starttime != 0 :
             offset = min(1, starttime)
-            i_arg = ['-ss', "%.06f" % (starttime - offset),
-                     '-i', self.filename,
-                     '-ss', "%.06f" % offset]
+            i_arg = [u'-ss', u"%.06f" % (starttime - offset),
+                     u'-i', self.filename,
+                     u'-ss', u"%.06f" % offset]
         else:
-            i_arg = [ '-i', self.filename]
+            i_arg = [ u'-i', self.filename]
 
 
-        cmd = ([get_setting("FFMPEG_BINARY")]+ i_arg +
-                ['-loglevel', 'error',
-                '-f', 'image2pipe',
-                "-pix_fmt", self.pix_fmt,
-                '-vcodec', 'rawvideo', '-'])
+        cmd = ([unicode(get_setting("FFMPEG_BINARY"))]+ i_arg +
+                [u'-loglevel', u'error',
+                u'-f', u'image2pipe',
+                u"-pix_fmt", unicode(self.pix_fmt),
+                u'-vcodec', u'rawvideo', u'-'])
 
-        popen_params = {"bufsize": self.bufsize,
-                        "stdout": sp.PIPE,
-                        "stderr": sp.PIPE,
-                        "stdin": DEVNULL}
+        popen_params = {u"bufsize": self.bufsize,
+                        u"stdout": sp.PIPE,
+                        u"stderr": sp.PIPE,
+                        u"stdin": DEVNULL}
 
         if os.name == "nt":
-            popen_params["creationflags"] = 0x08000000
+            popen_params[u"creationflags"] = 0x08000000
 
         self.proc = sp.Popen(cmd, **popen_params)
 
